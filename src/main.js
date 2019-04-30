@@ -12,14 +12,24 @@ Vue.use(ElementUI);
 import VueRouter from 'vue-router'
 //导入index的vue
 import index from './components/index.vue'
+//导入detail的vue
+import detail from './components/detail.vue'
 
 //Vue.use一下
 Vue.use(VueRouter)
 // 写规则
 const routes = [
+  //index的规则
   {
     path: '/index',
     component: index
+  },
+  //detail规则
+  {
+    // path: '/detail',
+    //修改路径规则动态的携带id
+    path: '/detail/:id',
+    component: detail
   }
 ]
 //实例化路由对象

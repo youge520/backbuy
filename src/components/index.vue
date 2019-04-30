@@ -112,7 +112,7 @@
             <!-- 走马灯的轮播图 -->
             <el-carousel height="341px">
               <el-carousel-item v-for="item in sliderlist" :key="item.id">
-                <img class="slide-img" :src="item.img_url" alt="">
+                <img class="slide-img" :src="item.img_url" alt>
               </el-carousel-item>
             </el-carousel>
           </div>
@@ -139,7 +139,11 @@
       <div class="main-tit">
         <h2>{{ item.catetitle }}</h2>
         <p>
-          <a v-for="(it, i) in item.level2catelist" :key="i" href="/goods/43.html">{{ it.subcatetitle }}</a>
+          <a
+            v-for="(it, i) in item.level2catelist"
+            :key="i"
+            href="/goods/43.html"
+          >{{ it.subcatetitle }}</a>
           <a href="/goods/40.html">
             更多
             <i>+</i>
@@ -149,13 +153,14 @@
       <div class="wrapper clearfix">
         <div class="wrap-box">
           <ul class="img-list">
-              <!-- 循环li -->
+            <!-- 循环li -->
             <li v-for="(it, i) in item.datas" :key="i">
-              <a href="#/site/goodsinfo/87" class>
+              <!-- <a href="#/site/goodsinfo/87" class> -->
+              <!-- <router-link to="/detail"> -->
+              <!-- 动态拼接id -->
+              <router-link :to="'/detail/'+ it.artID">
                 <div class="img-box">
-                  <img
-                    :src="it.img_url"
-                  >
+                  <img :src="it.img_url">
                 </div>
                 <div class="info">
                   <h3>{{ it.artTitle }}</h3>
@@ -170,7 +175,8 @@
                     </span>
                   </p>
                 </div>
-              </a>
+              </router-link>
+              <!-- </a> -->
             </li>
           </ul>
         </div>
@@ -206,13 +212,12 @@ export default {
         this.sliderlist = res.data.message.sliderlist;
         this.toplist = res.data.message.toplist;
       });
-      axios
-      .get('http://111.230.232.110:8899/site/goods/getgoodsgroup')
+    axios
+      .get("http://111.230.232.110:8899/site/goods/getgoodsgroup")
       .then(res => {
-          console.log(res);
-          this.sectionList = res.data.message
-      })
-      
+        console.log(res);
+        this.sectionList = res.data.message;
+      });
   },
   //过滤器
   filters: {
@@ -227,9 +232,9 @@ export default {
 </script>
 
 <style>
-    .slide-img{
-        display: block;
-        width: 100%;
-        height: 100%;
-    }
+.slide-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
 </style>
