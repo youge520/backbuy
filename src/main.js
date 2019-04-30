@@ -3,10 +3,16 @@ import App from './App.vue'
 // 导入公共样式
 import './assets/statics/site/css/style.css'
 
+//导入饿了么ui
+import ElementUI from "element-ui";
+import "element-ui/lib/theme-chalk/index.css";
+Vue.use(ElementUI);
+
 //导入路由
 import VueRouter from 'vue-router'
 //导入index的vue
 import index from './components/index.vue'
+
 //Vue.use一下
 Vue.use(VueRouter)
 // 写规则
