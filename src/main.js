@@ -14,6 +14,15 @@ import VueRouter from 'vue-router'
 import index from './components/index.vue'
 //导入detail的vue
 import detail from './components/detail.vue'
+//导入userContainer
+import userContainer from './components/userContainer.vue'
+//导入userIndex
+import userIndex from './components/userIndex.vue'
+//导入userOrder
+import userOrder from './components/userOrder.vue'
+//导入userDetail
+import userDetail from './components/userDetail.vue'
+
 
 //Vue.use一下
 Vue.use(VueRouter)
@@ -30,6 +39,26 @@ const routes = [
     //修改路径规则动态的携带id
     path: '/detail/:id',
     component: detail
+  },
+  //会员中心组件
+  {
+    path: '/user',
+    component: userContainer,
+    //嵌套路由的属性，必须嵌套在大盒子的组件中,嵌套之后的地址不要写/
+    children:[
+      {
+        path: 'Index',
+        component: userIndex
+      },
+      {
+        path: 'Order',
+        component: userOrder
+      },
+      {
+        path: 'Detail',
+        component: userDetail
+      }
+    ]
   }
 ]
 //实例化路由对象

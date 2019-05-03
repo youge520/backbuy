@@ -4,7 +4,12 @@
     <div class="section">
       <div class="location">
         <span>当前位置：</span>
-        <a href="#/" class="router-link-active">首页</a> &gt;
+        <!-- <a href="#/" class="router-link-active"> -->
+        <router-link to="/index">
+          首页
+        </router-link>
+        <!-- </a> -->
+         &gt;
         <a href="#/site/goodslist" class="router-link-exact-active router-link-active">购物商城</a>
       </div>
     </div>
@@ -215,7 +220,7 @@ export default {
     axios
       .get("http://111.230.232.110:8899/site/goods/getgoodsgroup")
       .then(res => {
-        console.log(res);
+        // console.log(res);
         this.sectionList = res.data.message;
       });
   },
