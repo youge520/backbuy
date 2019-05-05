@@ -82,7 +82,11 @@
                     <a href="javascript:;" @click="showDesc=true" :class="{selected:showDesc}">商品介绍</a>
                   </li>
                   <li>
-                    <a href="javascript:;" @click="showDesc=false" :class="{selected:!showDesc}">商品评论</a>
+                    <a
+                      href="javascript:;"
+                      @click="showDesc=false"
+                      :class="{selected:!showDesc}"
+                    >商品评论</a>
                   </li>
                 </ul>
               </div>
@@ -246,43 +250,43 @@ export default {
         });
     },
     //分页插件
-     handleSizeChange(val) {
-        // console.log(`每页 ${val} 条`);
-        //保持页码
-        this.pageSize = val;
-        //重新获取数据
-        this.getComments();
-      },
-      handleCurrentChange(val) {
-        // console.log(`当前页: ${val}`);
-        //修改页码
-        this.pageIndex = val;
-        //重新获取数据
-        this.getComments();
-      },
-      //发表评论
-  postComment() {
-    if (this.comment == 0){
-      //弹框
-      this.$message.error('亲，输入点内容呗');
-      return;
-    } else {
-      this.$axios
-        .post(`/site/validate/comment/post/goods/${this.$route.params.id}`, {
-          commenttxt: this.comment
-        })
-        .then(res => {
-          console.log(res);
-          if (res.data.status === 0) {
-            this.$message.success(res.data.message);
-            //本地清空
-            this.comment = "";
-            //重新获取评论
-            this.getComments();
-          }
-        });
+    handleSizeChange(val) {
+      // console.log(`每页 ${val} 条`);
+      //保持页码
+      this.pageSize = val;
+      //重新获取数据
+      this.getComments();
+    },
+    handleCurrentChange(val) {
+      // console.log(`当前页: ${val}`);
+      //修改页码
+      this.pageIndex = val;
+      //重新获取数据
+      this.getComments();
+    },
+    //发表评论
+    postComment() {
+      if (this.comment == 0) {
+        //弹框
+        this.$message.error("亲，输入点内容呗");
+        return;
+      } else {
+        this.$axios
+          .post(`/site/validate/comment/post/goods/${this.$route.params.id}`, {
+            commenttxt: this.comment
+          })
+          .then(res => {
+            // console.log(res);
+            if (res.data.status === 0) {
+              this.$message.success(res.data.message);
+              //本地清空
+              this.comment = "";
+              //重新获取评论
+              this.getComments();
+            }
+          });
+      }
     }
-  },
   },
   //过滤器
   // filters: {
