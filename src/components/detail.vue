@@ -213,7 +213,7 @@
 
 <script>
 //导入aixos
-import axios from "axios";
+// import axios from "axios";
 //导入moment
 import moment from "moment";
 
@@ -245,9 +245,9 @@ export default {
   //获取数据
   created() {
     // console.log(this.$route.params.id)
-    axios
+    this.$axios
       .get(
-        `http://111.230.232.110:8899/site/goods/getgoodsinfo/${
+        `/site/goods/getgoodsinfo/${
           this.$route.params.id
         }`
       )
@@ -263,8 +263,8 @@ export default {
     if (this.pinglun == "") {
       alert("gun");
     }else{
-        axios
-        .post(`http://111.230.232.110:8899/site/validate/comment/post/goods/${this.$route.params.id}`,{
+        this.$axios
+        .post(`/site/validate/comment/post/goods/${this.$route.params.id}`,{
             commenttxt: this.comment
         })
         .then(res => {
@@ -282,8 +282,8 @@ export default {
   },
   //获取评论的方法
   getComments(){
-      axios
-      .get(`site/comment/getbypage/goods/${this.$route.params.id}?pageIndex=${this.pageIndex}&pageSize=${this.pageSize}`)
+      this.$axios
+      .get(`/site/comment/getbypage/goods/${this.$route.params.id}?pageIndex=${this.pageIndex}&pageSize=${this.pageSize}`)
       .then(res => {
           console.log(res);
           this.totalcount = res.data.totalcount;

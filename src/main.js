@@ -23,6 +23,13 @@ import userOrder from './components/userOrder.vue'
 //导入userDetail
 import userDetail from './components/userDetail.vue'
 
+//导入axios  设置到axios原型上  方便共享
+import axios from 'axios'
+Vue.prototype.$axios = axios
+
+//设置axios的基地址
+axios.defaults.baseURL = 'http://111.230.232.110:8899';
+
 
 //Vue.use一下
 Vue.use(VueRouter)
