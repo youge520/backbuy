@@ -30,6 +30,13 @@ Vue.prototype.$axios = axios
 //设置axios的基地址
 axios.defaults.baseURL = 'http://111.230.232.110:8899';
 
+//定义全局过滤器
+//导入moment
+import moment from 'moment'
+Vue.filter('formatTime', (value) => {
+    return moment(value).format('YYYY年MM月DD日')
+})
+
 
 //Vue.use一下
 Vue.use(VueRouter)

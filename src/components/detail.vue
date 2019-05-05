@@ -14,15 +14,12 @@
           <div class="left-925">
             <div class="goods-box clearfix">
               <div class="pic-box">
-                <img class="yuan" :src="imglist.original_path" alt="">
-                <img class="suo" :src="imglist.thumb_path" alt="">
                 <!-- 设置轮播图 -->
-                <!-- <el-carousel>
-                  <el-carousel-item v-for="(item,index) in imglist" :key="index">
-                    <h3>{{ item }}</h3>
-                    <img :src="item.thumb_path" alt>
+                <el-carousel height="352px">
+                  <el-carousel-item v-for="item in imglist" :key="item.id">
+                    <img :src="item.thumb_path" alt class="sleact-img">
                   </el-carousel-item>
-                </el-carousel> -->
+                </el-carousel>
               </div>
               <div class="goods-spec">
                 <h1>{{ goodsinfo.title }}</h1>
@@ -50,35 +47,12 @@
                     <dt>购买数量</dt>
                     <dd>
                       <div class="stock-box">
-                        <div class="el-input-number el-input-number--small">
-                          <span role="button" class="el-input-number__decrease is-disabled">
-                            <i class="el-icon-minus"></i>
-                          </span>
-                          <span role="button" class="el-input-number__increase">
-                            <i class="el-icon-plus"></i>
-                          </span>
-                          <div class="el-input el-input--small">
-                            <!---->
-                            <input
-                              autocomplete="off"
-                              size="small"
-                              type="text"
-                              rows="2"
-                              max="60"
-                              min="1"
-                              validateevent="true"
-                              class="el-input__inner"
-                              role="spinbutton"
-                              aria-valuemax="60"
-                              aria-valuemin="1"
-                              aria-valuenow="1"
-                              aria-disabled="false"
-                            >
-                            <!---->
-                            <!---->
-                            <!---->
-                          </div>
-                        </div>
+                        <el-input-number
+                          v-model="num"
+                          :min="1"
+                          :max="goodsinfo.stock_quantity"
+                          label="描述文字"
+                        ></el-input-number>
                       </div>
                       <span class="stock-txt">
                         库存
@@ -215,8 +189,7 @@
 //导入aixos
 // import axios from "axios";
 //导入moment
-import moment from "moment";
-
+// import moment from "moment";
 
 export default {
   name: "detail",
@@ -228,12 +201,14 @@ export default {
       hotgoodslist: [],
       //商品图片
       imglist: [],
+      //计数器
+      num: 1,
       //tab索引
       index: 1,
       //输入评论的内容
       comment: "",
       //页码
-      pageIndex:1,
+      pageIndex: 1,
       //页容量
       pageSize: 10,
       //总条数
@@ -246,11 +221,7 @@ export default {
   created() {
     // console.log(this.$route.params.id)
     this.$axios
-      .get(
-        `/site/goods/getgoodsinfo/${
-          this.$route.params.id
-        }`
-      )
+      .get(`/site/goods/getgoodsinfo/${this.$route.params.id}`)
       .then(res => {
         // console.log(res);
         this.goodsinfo = res.data.message.goodsinfo;
@@ -262,39 +233,44 @@ export default {
   postComment() {
     if (this.pinglun == "") {
       alert("gun");
-    }else{
-        this.$axios
-        .post(`/site/validate/comment/post/goods/${this.$route.params.id}`,{
-            commenttxt: this.comment
+    } else {
+      this.$axios
+        .post(`/site/validate/comment/post/goods/${this.$route.params.id}`, {
+          commenttxt: this.comment
         })
         .then(res => {
-            console.log(res);
-            if(this.data.status === 0){
-                alert(this.data.message);
-                //本地清空
-                this.comment = '';
-                //重新获取评论
-                this.pageIndex=1;
-                this.getComments();
-            }
-        })
+          console.log(res);
+          if (this.data.status === 0) {
+            alert(this.data.message);
+            //本地清空
+            this.comment = "";
+            //重新获取评论
+            this.pageIndex = 1;
+            this.getComments();
+          }
+        });
     }
   },
   //获取评论的方法
-  getComments(){
-      this.$axios
-      .get(`/site/comment/getbypage/goods/${this.$route.params.id}?pageIndex=${this.pageIndex}&pageSize=${this.pageSize}`)
+  getComments() {
+    this.$axios
+      .get(
+        `/site/comment/getbypage/goods/${this.$route.params.id}?pageIndex=${
+          this.pageIndex
+        }&pageSize=${this.pageSize}`
+      )
       .then(res => {
-          console.log(res);
-          this.totalcount = res.data.totalcount;
-          this.commentList = res.data.message;
-      })
-  },
-  filters: {
-    formatTime(value) {
-      return moment(value).format("YYYY年MM月DD日");
-    }
+        console.log(res);
+        this.totalcount = res.data.totalcount;
+        this.commentList = res.data.message;
+      });
   }
+  //过滤器
+  // filters: {
+  //   formatTime(value) {
+  //     return moment(value).format("YYYY年MM月DD日");
+  //   }
+  // }
 };
 </script>
 
@@ -308,14 +284,11 @@ export default {
 .tab-content p {
   font-size: 14px;
 }
-.pic-box .yuan {
-  display: block;
-  width: 400px;
-  height: 400px;
+.pic-box {
+  width: 380px;
+  height: 352px;
 }
-.pic-box .suo {
-  display: block;
-  width: 50px;
-  height: 50px;
+.sleact-img {
+  width: 100%;
 }
 </style>

@@ -194,7 +194,7 @@
 //导入axios
 // import axios from "axios";
 //导入moment
-import moment from "moment";
+// import moment from "moment";
 
 export default {
   name: "index",
@@ -225,14 +225,14 @@ export default {
       });
   },
   //过滤器
-  filters: {
-    formatTime(value) {
-      // return value.split('T')[0]
-      //使用moment处理时间
-      return moment(value).format("YYYY年MM月DD日HH时");
-      // return moment(value).format('YYYY年MM月DD日HH时mm分ss秒')
-    }
-  }
+  // filters: {
+  //   formatTime(value) {
+  //     // return value.split('T')[0]
+  //     //使用moment处理时间
+  //     return moment(value).format("YYYY年MM月DD日HH时");
+  //     // return moment(value).format('YYYY年MM月DD日HH时mm分ss秒')
+  //   }
+  // }
 };
 </script>
 
