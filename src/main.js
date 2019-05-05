@@ -28,6 +28,11 @@ import userDetail from './components/userDetail.vue'
 Vue.use(VueRouter)
 // 写规则
 const routes = [
+  //数据的重定向
+  {
+    path: '/',
+    redirect: '/index'
+  },
   //index的规则
   {
     path: '/index',
