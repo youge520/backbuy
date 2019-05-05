@@ -79,16 +79,16 @@
               >
                 <ul>
                   <li>
-                    <a href="javascript:;" @click="index=1" :class="{selected:index==1}">商品介绍</a>
+                    <a href="javascript:;" @click="showDesc=true" :class="{selected:showDesc}">商品介绍</a>
                   </li>
                   <li>
-                    <a href="javascript:;" @click="index=2" :class="{selected:index==2}">商品评论</a>
+                    <a href="javascript:;" @click="showDesc=false" :class="{selected:!showDesc}">商品评论</a>
                   </li>
                 </ul>
               </div>
               <!-- 底部的图片详情 -->
-              <div class="tab-content entry" v-show="index==1" v-html="goodsinfo.content"></div>
-              <div class="tab-content" v-show="index==2" style="display: block;">
+              <div class="tab-content entry" v-show="showDesc" v-html="goodsinfo.content"></div>
+              <div class="tab-content" v-show="!showDesc" style="display: block;">
                 <div class="comment-box">
                   <div id="commentForm" name="commentForm" class="form-box">
                     <div class="avatar-box">
@@ -102,7 +102,7 @@
                           sucmsg=" "
                           data-type="*10-1000"
                           nullmsg="请填写评论内容！"
-                          v-model="comment"
+                          v-model.trim="comment"
                         ></textarea>
                         <span class="Validform_checktip"></span>
                       </div>
@@ -113,6 +113,7 @@
                           type="submit"
                           value="提交评论"
                           class="submit"
+                          @click="postComment"
                         >
                         <span class="Validform_checktip"></span>
                       </div>
@@ -122,37 +123,31 @@
                     <p
                       style="margin: 5px 0px 15px 69px; line-height: 42px; text-align: center; border: 1px solid rgb(247, 247, 247);"
                     >暂无评论，快来抢沙发吧！</p>
-                    <li>
+                    <li v-for="(item, index) in commentList" :key="index">
                       <div class="avatar-box">
                         <i class="iconfont icon-user-full"></i>
                       </div>
                       <div class="inner-box">
                         <div class="info">
-                          <span>匿名用户</span>
-                          <span>2017/10/23 14:58:59</span>
+                          <span>{{ item.user_name }}</span>
+                          <span>{{ item.add_time }}</span>
                         </div>
-                        <p>testtesttest</p>
-                      </div>
-                    </li>
-                    <li>
-                      <div class="avatar-box">
-                        <i class="iconfont icon-user-full"></i>
-                      </div>
-                      <div class="inner-box">
-                        <div class="info">
-                          <span>匿名用户</span>
-                          <span>2017/10/23 14:59:36</span>
-                        </div>
-                        <p>很清晰调动单很清晰调动单</p>
+                        <p>{{ item.content }}</p>
                       </div>
                     </li>
                   </ul>
                   <div class="page-box" style="margin: 5px 0px 0px 62px;">
-                    <div id="pagination" class="digg">
-                      <span class="disabled">« 上一页</span>
-                      <span class="current">1</span>
-                      <span class="disabled">下一页 »</span>
-                    </div>
+                    <!-- 分页 -->
+                    <el-pagination
+                      @size-change="handleSizeChange"
+                      @current-change="handleCurrentChange"
+                      :current-page="pageIndex"
+                      :page-sizes="[2, 4, 6, 8, 10]"
+                      :page-size="pageSize"
+                      layout="total, sizes, prev, pager, next, jumper"
+                      :total="totalcount"
+                      background
+                    ></el-pagination>
                   </div>
                 </div>
               </div>
@@ -166,12 +161,16 @@
                   <!-- 循环li标签获得商品 -->
                   <li v-for="(item, index) in hotgoodslist" :key="index">
                     <div class="img-box">
-                      <a href="#/site/goodsinfo/90" class>
+                      <!-- <a href="#/site/goodsinfo/90" class> -->
+                      <router-link :to="'/detail/' + item.id">
                         <img :src="item.img_url">
-                      </a>
+                      </router-link>
+                      <!-- </a> -->
                     </div>
                     <div class="txt-box">
-                      <a href="#/site/goodsinfo/90" class>{{ item.title }}</a>
+                      <!-- <a href="#/site/goodsinfo/90" class> -->
+                      <router-link :to="'/detail/' + item.id">{{ item.title }}</router-link>
+                      <!-- </a> -->
                       <span>{{ item.add_time | formatTime }}</span>
                     </div>
                   </li>
@@ -203,8 +202,8 @@ export default {
       imglist: [],
       //计数器
       num: 1,
-      //tab索引
-      index: 1,
+      //是否显示描述
+      showDesc: true,
       //输入评论的内容
       comment: "",
       //页码
@@ -228,11 +227,45 @@ export default {
         this.hotgoodslist = res.data.message.hotgoodslist;
         this.imglist = res.data.message.imglist;
       });
+    //获取评论
+    this.getComments();
   },
-  //发表评论
+  methods: {
+    //获取评论的方法
+    getComments() {
+      this.$axios
+        .get(
+          `/site/comment/getbypage/goods/${this.$route.params.id}?pageIndex=${
+            this.pageIndex
+          }&pageSize=${this.pageSize}`
+        )
+        .then(res => {
+          // console.log(res);
+          this.totalcount = res.data.totalcount;
+          this.commentList = res.data.message;
+        });
+    },
+    //分页插件
+     handleSizeChange(val) {
+        // console.log(`每页 ${val} 条`);
+        //保持页码
+        this.pageSize = val;
+        //重新获取数据
+        this.getComments();
+      },
+      handleCurrentChange(val) {
+        // console.log(`当前页: ${val}`);
+        //修改页码
+        this.pageIndex = val;
+        //重新获取数据
+        this.getComments();
+      },
+      //发表评论
   postComment() {
-    if (this.pinglun == "") {
-      alert("gun");
+    if (this.comment == 0){
+      //弹框
+      this.$message.error('亲，输入点内容呗');
+      return;
     } else {
       this.$axios
         .post(`/site/validate/comment/post/goods/${this.$route.params.id}`, {
@@ -240,37 +273,36 @@ export default {
         })
         .then(res => {
           console.log(res);
-          if (this.data.status === 0) {
-            alert(this.data.message);
+          if (res.data.status === 0) {
+            this.$message.success(res.data.message);
             //本地清空
             this.comment = "";
             //重新获取评论
-            this.pageIndex = 1;
             this.getComments();
           }
         });
     }
   },
-  //获取评论的方法
-  getComments() {
-    this.$axios
-      .get(
-        `/site/comment/getbypage/goods/${this.$route.params.id}?pageIndex=${
-          this.pageIndex
-        }&pageSize=${this.pageSize}`
-      )
-      .then(res => {
-        console.log(res);
-        this.totalcount = res.data.totalcount;
-        this.commentList = res.data.message;
-      });
-  }
+  },
   //过滤器
   // filters: {
   //   formatTime(value) {
   //     return moment(value).format("YYYY年MM月DD日");
   //   }
   // }
+  //侦听器
+  watch: {
+    "$route.params.id"(reload) {
+      this.$axios.get(`/site/goods/getgoodsinfo/${reload}`).then(res => {
+        // console.log(res);
+        this.goodsinfo = res.data.message.goodsinfo;
+        this.hotgoodslist = res.data.message.hotgoodslist;
+        this.imglist = res.data.message.imglist;
+      });
+      //获取评论
+      this.getComments();
+    }
+  }
 };
 </script>
 

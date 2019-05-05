@@ -32,7 +32,7 @@
                       </h2>
                       <div class="list">
                         <p>
-                          <a href="#/site/member/orderlist" class>
+                          <a href="#" class>
                             <i class="iconfont icon-arrow-right"></i>交易订单
                           </a>
                           <router-link to="/user/Index">会员中心</router-link>

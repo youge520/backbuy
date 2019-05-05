@@ -76,6 +76,11 @@ const routes = [
       {
         path: 'Detail',
         component: userDetail
+      },
+      //数据重定向
+      { 
+        path: '',
+        component: userIndex
       }
     ]
   }
